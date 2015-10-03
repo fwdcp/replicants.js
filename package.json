@@ -2,7 +2,7 @@
   "name": "replicants.js",
   "version": "0.0.0",
   "description": "client/server JavaScript library to share objects over the network",
-  "main": "node/index.js",
+  "main": "server.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/fwdcp/replicants.js.git"
