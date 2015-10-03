@@ -102,16 +102,16 @@ class Replicator {
         });
     }
 
-    getReplicant(name, defValue) {
+    getReplicant(name) {
         if (!this.replicants[name]) {
-            this.replicants[name] = new Replicant(this, name, defValue);
+            this.replicants[name] = new Replicant(this, name);
         }
 
         return this.replicants[name];
     }
 
-    onClientRegister(socket, name, defValue, callback) {
-        let replicant = this.getReplicant(name, defValue);
+    onClientRegister(socket, name, callback) {
+        let replicant = this.getReplicant(name);
         socket.join(this.roomPrefix + replicant.name);
 
         callback();
@@ -137,16 +137,12 @@ class Replicator {
 }
 
 class Replicant {
-    constructor(replicator, name, value) {
+    constructor(replicator, name) {
         this._replicator = replicator;
         this.name = name;
         this._updating = false;
         this._revisionNum = 0;
         this.revisionHistory = [];
-
-        if (value !== undefined) {
-            this.pushChanges(this.value, value, null);
-        }
     }
 
     get value() {

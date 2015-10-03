@@ -93,9 +93,9 @@ class Replicator {
         });
     }
 
-    getReplicant(name, defValue) {
+    getReplicant(name) {
         if (!this.replicants[name]) {
-            this.replicants[name] = new Replicant(this, name, defValue);
+            this.replicants[name] = new Replicant(this, name);
         }
 
         return this.replicants[name];
@@ -114,15 +114,22 @@ class Replicator {
     }
 }
 
-class Replicant {
-    constructor(replicator, name, value) {
+class Replicant extends EventEmitter {
+    constructor(replicator, name) {
+        super();
+
         this._replicator = replicator;
         this.name = name;
+        this.ready = false;
         this._updating = false;
         this._revisionNum = 0;
         this.revisionHistory = [];
 
-        this._replicator._io.emit('replicantRegister', this.name, value, this.synchronize.bind(this));
+        this._replicator._io.emit('replicantRegister', this.name, function() {
+            this.synchronize();
+            this.ready = true;
+            this.emit('ready');
+        }.bind(this));
     }
 
     get value() {
